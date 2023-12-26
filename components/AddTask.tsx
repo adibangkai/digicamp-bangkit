@@ -53,7 +53,7 @@ export default function AddTask() {
                 </SelectItem>
               </Select>
               {formState?.message ? (
-                <div className="bg-red-200 p-2 rounded mt-2 capitalize">
+                <div className="text-red-500 border-2 border-red-500 p-2 rounded mt-2 capitalize">
                   {formState.message}
                 </div>
               ) : null}

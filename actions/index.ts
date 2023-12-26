@@ -1,5 +1,6 @@
 "use server";
 import { db } from "@/db";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 interface FormEditType {
@@ -8,6 +9,8 @@ interface FormEditType {
   description: string;
   status: string;
 }
+
+//server action for edit task
 export async function editTask(formEdit: FormEditType) {
   const { id, title, description, status } = formEdit;
   await db.task.update({
@@ -15,22 +18,24 @@ export async function editTask(formEdit: FormEditType) {
     data: { title, description, status },
   });
 
-  redirect(`/`);
+  revalidatePath(`/`);
 }
 
+//server action for delete task
 export async function deleteTask(id: number) {
   await db.task.delete({
     where: { id },
   });
 
-  redirect(`/`);
+  revalidatePath(`/`);
 }
 
+//server action for create task
 export async function createTask(
   formState: { message: string },
   formData: FormData
 ) {
-  //validation
+  //add validation for initial task
   try {
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
@@ -39,11 +44,6 @@ export async function createTask(
     if (typeof title !== "string" || title.length < 3) {
       return {
         message: "title must be longer",
-      };
-    }
-    if (typeof description !== "string" || description.length < 10) {
-      return {
-        message: "description must be longer",
       };
     }
 
@@ -67,6 +67,6 @@ export async function createTask(
     }
   }
 
-  //redirect to root
+  //redirect  root
   redirect("/");
 }

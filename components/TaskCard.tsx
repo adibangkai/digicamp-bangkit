@@ -11,11 +11,9 @@ import {
   useDisclosure,
   Textarea,
 } from "@nextui-org/react";
-import { useFormState } from "react-dom";
 import { editTask, deleteTask } from "@/actions";
 import { useFormStatus } from "react-dom";
 import { useState } from "react";
-import { act } from "react-dom/test-utils";
 
 interface TaskType {
   task: {
@@ -39,7 +37,7 @@ export default function TaskCard({ task }: TaskType) {
         onClick={onOpen}
         className="w-1/6 bg-slate-50 w-full rounded-lg shadow-md min-h-[100px] p-4 hover:bg-slate-100 cursor-pointer grid"
       >
-        <h2 className="text-md font-bold text-left">{task.title}</h2>
+        <h2 className="text-md font-bold text-left capitalize">{task.title}</h2>
         <p className="text-sm font-light truncate">{task.description}</p>
         <p
           className={`text-sm text-right mt-4 done font-semibold`}
