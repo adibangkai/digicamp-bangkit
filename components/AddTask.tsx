@@ -15,6 +15,7 @@ import { createTask } from "@/actions";
 export default function AddTask() {
   const { pending } = useFormStatus();
   const [formState, action] = useFormState(createTask, { message: "" });
+  const statusList = ["ongoing", "todo", "done", "error"];
 
   return (
     <div className="mx-20">
@@ -39,18 +40,15 @@ export default function AddTask() {
                 placeholder="describe your task"
               />
               <Select label="Select Status" name="status" className="max-w-xs">
-                <SelectItem value="error" key="ongoing">
-                  Ongoing
-                </SelectItem>
-                <SelectItem value="todo" key="done">
-                  Done
-                </SelectItem>
-                <SelectItem value="todo" key="todo">
-                  Todo
-                </SelectItem>
-                <SelectItem value="ongoing" key="error">
-                  Error
-                </SelectItem>
+                {statusList.map((status) => (
+                  <SelectItem
+                    value={status}
+                    key={status}
+                    className="capitalize"
+                  >
+                    {status}
+                  </SelectItem>
+                ))}
               </Select>
               {formState?.message ? (
                 <div className="text-red-500 border-2 border-red-500 p-2 rounded mt-2 capitalize">

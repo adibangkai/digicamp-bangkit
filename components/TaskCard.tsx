@@ -30,12 +30,13 @@ export default function TaskCard({ task }: TaskType) {
   const [formEdit, setFormEdit] = useState({
     ...task,
   });
+  const statusList = ["ongoing", "todo", "done", "error"];
 
   return (
     <>
       <div
         onClick={onOpen}
-        className="w-1/6 bg-slate-50 w-full rounded-lg shadow-md min-h-[100px] p-4 hover:bg-slate-100 cursor-pointer grid"
+        className="w-1/6 bg-slate-50 w-full rounded-lg shadow-md min-h-[100px] p-4 hover:bg-slate-100 cursor-pointer grid transition ease-in-out"
       >
         <h2 className="text-md font-bold text-left capitalize">{task.title}</h2>
         <p className="text-sm font-light truncate">{task.description}</p>
@@ -71,18 +72,15 @@ export default function TaskCard({ task }: TaskType) {
                     setFormEdit((s) => ({ ...s, status: e.target.value }))
                   }
                 >
-                  <SelectItem value="error" key="ongoing">
-                    Ongoing
-                  </SelectItem>
-                  <SelectItem value="todo" key="done">
-                    Done
-                  </SelectItem>
-                  <SelectItem value="todo" key="todo">
-                    Todo
-                  </SelectItem>
-                  <SelectItem value="ongoing" key="error">
-                    Error
-                  </SelectItem>
+                  {statusList.map((status) => (
+                    <SelectItem
+                      value={status}
+                      key={status}
+                      className="capitalize"
+                    >
+                      {status}
+                    </SelectItem>
+                  ))}
                 </Select>
               </ModalBody>
               <ModalFooter>
