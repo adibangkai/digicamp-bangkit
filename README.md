@@ -1,4 +1,4 @@
-###this is take home technical test for Digicamp by Dexa Group
+### this is take home technical test for Digicamp by Dexa Group
 
 to run please clone this repo
 
