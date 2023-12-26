@@ -96,7 +96,6 @@ export default function TaskCard({ task }: TaskType) {
                     Delete
                   </Button>
                 </form>
-                <input type="hidden" value={task.id} />
                 <form action={editTask.bind(null, formEdit)}>
                   <Button color="primary" type="submit" isLoading={pending}>
                     Save
