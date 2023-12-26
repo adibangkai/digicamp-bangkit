@@ -2,17 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-.todo {
-  color: darkcyan;
-}
-
-.error {
-  color: maroon;
-}
-
-.done {
-  color: lightseagreen;
-}
-.ongoing {
-  color: sandybrown;
+:root {
+  --primary-color: #fff;
+  --secondary-color: #000;
+  --todo: navy;
+  --error: rgb(205, 34, 34);
+  --done: rgb(25, 204, 138);
+  --ongoing: sandybrown;
 }

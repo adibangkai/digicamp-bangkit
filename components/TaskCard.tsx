@@ -11,59 +11,99 @@ import {
   useDisclosure,
   Textarea,
 } from "@nextui-org/react";
+import { useFormState } from "react-dom";
+import { editTask, deleteTask } from "@/actions";
+import { useFormStatus } from "react-dom";
+import { useState } from "react";
+import { act } from "react-dom/test-utils";
 
-export default function TaskCard() {
+interface TaskType {
+  task: {
+    id: number;
+    title: string;
+    description: string;
+    status: string;
+  };
+}
+
+export default function TaskCard({ task }: TaskType) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { pending } = useFormStatus();
+  const [formEdit, setFormEdit] = useState({
+    ...task,
+  });
 
   return (
     <>
-      <Button
-        onPress={onOpen}
-        className="w-1/6 bg-slate-50 w-full rounded-lg shadow-lg min-h-[100px] p-4 hover:bg-slate-100 cursor-pointer grid"
+      <div
+        onClick={onOpen}
+        className="w-1/6 bg-slate-50 w-full rounded-lg shadow-md min-h-[100px] p-4 hover:bg-slate-100 cursor-pointer grid"
       >
-        <h2 className="text-md font-bold text-left">Title Task</h2>
-        <p className="text-sm font-light truncate">
-          ini tugas pertamaku Lorem ipsum dolor sit amet consectetur adipisicing
-          elit. Autem in corrupti ex placeat, nisi adipisci facilis consectetur,
-          maxime, esse cupiditate soluta beatae assumenda unde aut dolorum
-          exercitationem dicta! Accusamus, beatae?
+        <h2 className="text-md font-bold text-left">{task.title}</h2>
+        <p className="text-sm font-light truncate">{task.description}</p>
+        <p
+          className={`text-sm text-right mt-4 done font-semibold`}
+          style={{ color: `var(--${task.status})` }}
+        >
+          {task.status}
         </p>
-        <p className="text-sm text-right mt-4 done font-semibold">status</p>
-      </Button>{" "}
+      </div>{" "}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                Title Task
+                {task.title}
               </ModalHeader>
+
               <ModalBody>
                 <Textarea
                   name="description"
                   placeholder="describe your task"
-                  value={
-                    "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur"
+                  value={formEdit.description}
+                  onChange={(e) =>
+                    setFormEdit((s) => ({ ...s, description: e.target.value }))
                   }
                 />
-                <Select label="Select Status" className="max-w-xs">
-                  <SelectItem value="error" key="error">
-                    On Going
+                <Select
+                  label="Select Status"
+                  name="status"
+                  className="max-w-xs"
+                  onChange={(e) =>
+                    setFormEdit((s) => ({ ...s, status: e.target.value }))
+                  }
+                >
+                  <SelectItem value="error" key="ongoing">
+                    Ongoing
                   </SelectItem>
-                  <SelectItem value="todo" key="todo">
+                  <SelectItem value="todo" key="done">
                     Done
                   </SelectItem>
-                  <SelectItem value="ongoing" key="ongoing">
+                  <SelectItem value="todo" key="todo">
+                    Todo
+                  </SelectItem>
+                  <SelectItem value="ongoing" key="error">
                     Error
                   </SelectItem>
                 </Select>
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
+                <form action={deleteTask.bind(null, task.id)}>
+                  <Button
+                    variant="bordered"
+                    type="submit"
+                    color="danger"
+                    isLoading={pending}
+                  >
+                    Delete
+                  </Button>
+                </form>
+                <input type="hidden" value={task.id} />
+                <form action={editTask.bind(null, formEdit)}>
+                  <Button color="primary" type="submit" isLoading={pending}>
+                    Save
+                  </Button>
+                </form>
               </ModalFooter>
             </>
           )}
